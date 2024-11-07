@@ -1,13 +1,10 @@
-#!/usr/bin/python3
-
-""" Module for implementing a Filter class that inherits from"""
+#!/usr/bin/env python3
+""" Redacting Formatter class """
 
 import re
+""" Redacting Formatter class """
 
 
-def filter_datum(fields: str, redaction: str, message: str, separator: str) -> str:
-    """ returns the log message obfuscated """
-    for field in fields:
-        message = re.sub(rf'{field}=.*?{separator}',
-                         f'{field}={redaction}{separator}', message)
-    return message
+def filter_datum(fields, redaction, message, separator):
+    pattern = '|'.join([rf'{field}=[^ {separator}]*' for field in fields])
+    return re.sub(pattern, lambda m: f'{m.group().split("=")[0]}={redaction}', message)
